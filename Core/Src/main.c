@@ -55,9 +55,11 @@ uint8_t ADCUpdateFlag = 0;
 uint16_t ADCFeedBack = 0;
 
 uint16_t PWMOut = 3000;
-
+float Rratio = 0;
+uint16_t NewPWM=0;
 uint64_t _micro = 0;
 uint64_t TimeOutputLoop = 0;
+uint64_t TimeOutputLoop2 = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -134,12 +136,20 @@ int main(void)
 		if (micros() - TimeOutputLoop >= 1000)//uS
 		{
 			TimeOutputLoop = micros();
+
 			// #001
+
+
+
+			NewPWM=(10000*1000)/(Rratio*2730);
+
+			PWMOut = NewPWM;
+
 
 			__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, PWMOut);
 
 		}
-
+		Rratio = ADCFeedBack/ (((float)PWMOut*2730)/10000);
 		if (ADCUpdateFlag)
 		{
 			ADCUpdateFlag = 0;
